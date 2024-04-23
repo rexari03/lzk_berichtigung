@@ -12,13 +12,16 @@ averages: dict[str, float] = {}
 t = texttable.Texttable(0)
 t.set_precision(2)
 
+
 def extract_brutto_data(brutto_data, brutto_reader):
+    years_local: list = []
     for i, line in enumerate(brutto_reader):
         if i == 0:
-            years = line[1:]
+            years_local = line[1:]
             continue
         brutto_data[line[0]] = line[1:]
-    return years
+    return years_local
+
 
 def extract_netto_data(netto_data, total_percentages, netto_reader):
     for i, line in enumerate(netto_reader):
