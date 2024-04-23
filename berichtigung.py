@@ -4,6 +4,9 @@ from tabulate import tabulate
 brutto_data: dict = {}
 netto_data: dict = {}
 total_percentages: dict[str, list[float]] = {}
+averages: dict[str, float] = {}
+rows: list[[]] = []
+self_supply: dict[str, float] = {}
 
 
 def extract_brutto_data(reader, brutto_data):
@@ -36,7 +39,6 @@ for key in brutto_data.keys():
     brutto_data[key] = [string.replace(".", "").replace(",", ".") for string in brutto_data[key]]
     netto_data[key] = [string.replace(".", "").replace(",", ".") for string in netto_data[key]]
 
-print(years)
 # calc percentages
 for i, year in enumerate(years):
     year_sum = 0.0
@@ -47,14 +49,10 @@ for i, year in enumerate(years):
         total_percentages[key].append((float(data[i]) / year_sum * 100 if data[i] != "0" else 0))
 
 # total_percentages
-averages = {}
-
 for key, value in total_percentages.items():
     averages[key] = sum(value) / len(total_percentages[key])
 
 # calc self_supply
-self_supply = {}
-
 for value in netto_data:
     percentage_sum = 0.0
     for i, data in enumerate(netto_data[value]):
@@ -64,7 +62,7 @@ for value in netto_data:
 
             percentage_sum += ((brutto_val / netto_val) * 100) - 100
     self_supply[value] = (percentage_sum / len(netto_data[value]))
-print(years)
+
 # create header
 header = years
 header.insert(0, 'Art')
@@ -72,7 +70,6 @@ header.append('Anteil (Mittelwerte)')
 header.append('Anteil Eigenbedarf(Mittelwerte)')
 
 # create row structure
-rows = []
 for name in netto_data.keys():
     row: list[str] = [f"{val:.2f}%" for val in total_percentages[name]]
     row.insert(0, name)

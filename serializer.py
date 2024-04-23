@@ -8,6 +8,7 @@ years: list[str]
 total_percentages: dict[str, list[float]] = {}
 self_supply_percentages: dict[str, list[float]] = {}
 averages: dict[str, float] = {}
+final_table: list[[]] = []
 
 t = texttable.Texttable(0)
 t.set_precision(2)
@@ -66,11 +67,10 @@ for key, n_data in netto_data.items():
         self_supply_percentages[key].append(100 - (float(val) / float(b_data[i]) * 100))
 
 # Create the table head
-head = years.copy()
+head: list[str] = years.copy()
 head.insert(0, "Art")
 head.append("Anteil (Mittelwert)")
 head.append("Eigenbedarf (Mittelwert)")
-table = []
 
 # Add table data
 for name in netto_data.keys():
@@ -79,10 +79,10 @@ for name in netto_data.keys():
     table_row.append(f"{averages[name]:.2f}%")
     table_row.append(f"{sum(self_supply_percentages[name]) / len(self_supply_percentages[name]):.2f}%")
     table_row = [val.replace(".", ",") for val in table_row]
-    table.append(table_row)
+    final_table.append(table_row)
 
 # Save data into file
 with open("result.txt", "w", encoding="utf-8") as f:
-    output = tabulate(table, headers=head)
+    output = tabulate(final_table, headers=head)
     if isinstance(output, str):
         f.write(output)
