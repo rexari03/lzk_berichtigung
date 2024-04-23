@@ -1,12 +1,16 @@
 import csv
 from tabulate import tabulate
 
-brutto_data: dict = {}
-netto_data: dict = {}
+brutto_data: dict[str, list] = {}
+netto_data: dict[str, list] = {}
+years: list[str] = []
+
 total_percentages: dict[str, list[float]] = {}
 averages: dict[str, float] = {}
-rows: list[[]] = []
 self_supply: dict[str, float] = {}
+
+row: list = []
+rows: list[[]] = []
 
 
 def extract_brutto_data(reader, brutto_data):
@@ -39,20 +43,19 @@ for key in brutto_data.keys():
     brutto_data[key] = [string.replace(".", "").replace(",", ".") for string in brutto_data[key]]
     netto_data[key] = [string.replace(".", "").replace(",", ".") for string in netto_data[key]]
 
-# calc percentages
+# Aufgabe 1
 for i, year in enumerate(years):
     year_sum = 0.0
     for value in netto_data:
-        print(value)
         year_sum += float(netto_data[value][i])
     for key, data in netto_data.items():
         total_percentages[key].append((float(data[i]) / year_sum * 100 if data[i] != "0" else 0))
 
-# total_percentages
+# Aufgabe 2
 for key, value in total_percentages.items():
     averages[key] = sum(value) / len(total_percentages[key])
 
-# calc self_supply
+# Aufgabe 3
 for value in netto_data:
     percentage_sum = 0.0
     for i, data in enumerate(netto_data[value]):
@@ -75,6 +78,7 @@ for name in netto_data.keys():
     row.insert(0, name)
     row.append(f"{averages[name]:.2f}%")
     row.append(f"{self_supply[name]:.2f}%")
+
     rows.append(row)
 
 # create table
