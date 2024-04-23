@@ -1,5 +1,6 @@
 import csv
 from tabulate import tabulate
+import pandas as pd
 
 
 class Serializer:
@@ -52,6 +53,7 @@ class Serializer:
         for key, value in self.percentages.items():
             self.average[key] = sum(value) / len(value)
 
+    #Aufgabe 3
     def calc_self_supply(self):
         for n_key, n_value in self.netto_data.items():
             percentages = []
@@ -74,16 +76,31 @@ class Serializer:
             row.append(f"{self.self_supply[key]:.2f}%")
             rows.append(row)
 
-        table = tabulate(rows, headers=header)
-        with open("result.txt", "w") as result:
-            result.write(table)
+        df = pd.DataFrame(rows)
+
+        table = tabulate(rows, headers=header, stralign="center", tablefmt="pretty")
+        df.to_excel("result.xlsx", header=header, index=False)
+
+    def test(self):
+        for i, year in enumerate(self.years):
+            for key, value in self.netto_data.items():
+                print(f"Year {year} at index {i}: Key is {key} and value is {value[i]}")
+
+    def test2(self):
+        for key, value in self.netto_data.items():
+            print(key)
+            for val in value:
+                print(val)
 
     def run(self):
         self.read_csv()
         self.clean_up()
+
         self.calc_percentages()
         self.calc_averages()
         self.calc_self_supply()
+        self.test2()
+
         self.create_table()
 
 
