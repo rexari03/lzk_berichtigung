@@ -14,8 +14,8 @@ class Serializer:
         self.self_supply: dict[str, float] = {}
 
     def read_csv(self):
-        with open("./data/netto.csv", "r", encoding="utf-8", newline="") as netto, open(
-                "./data/brutto.csv", "r", encoding="utf-8", newline="") as brutto:
+        with open("./data/netto.csv", "r", encoding="utf-8") as netto, open(
+                "./data/brutto.csv", "r", encoding="utf-8") as brutto:
             netto_reader = csv.reader(netto, delimiter=";")
             brutto_reader = csv.reader(brutto, delimiter=";")
 
@@ -79,6 +79,8 @@ class Serializer:
         df = pd.DataFrame(rows)
 
         table = tabulate(rows, headers=header, stralign="center", tablefmt="pretty")
+        with open("result.txt", "w") as result:
+            result.write(table)
         df.to_excel("result.xlsx", header=header, index=False)
 
     def test(self):
@@ -99,7 +101,6 @@ class Serializer:
         self.calc_percentages()
         self.calc_averages()
         self.calc_self_supply()
-        self.test2()
 
         self.create_table()
 
